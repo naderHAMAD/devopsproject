@@ -35,13 +35,24 @@ pipeline {
               }
         }
       
-        stage('Building our image') {
+         stage('DOCKER COMPOSE') {
+                steps {
+                            sh 'docker-compose up -d --build'
+                }
+          }
+
+     stage("nexus deploy"){
                steps{
-                        script {
-                            dockerImage = docker.build registry + ":latest"
-                        }
+                       sh 'mvn  deploy'
                }
-        }
+          }
+
+          stage('MVN SONARQUBE'){
+
+                steps{
+                          sh  'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=sonar'
+                }
+          }
 
       
 

@@ -11,11 +11,13 @@ pipeline {
                 echo 'Pulling...';
              git branch: 'nader', url: 'https://github.com/naderHAMAD/devopsproject.git'
         }
-
-
-
-
-
         }
+
+          stage("Test JUnit /Mockito"){
+                steps {
+                            sh 'mvn test'
+                }
+          }
+
     }
 }

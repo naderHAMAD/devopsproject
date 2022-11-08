@@ -23,6 +23,25 @@ pipeline {
                 sh  'mvn clean'
             }
         }
+         stage('MVN COMPILE'){
+            steps{
+                sh  'mvn compile'
+            }
+        }
+
+        stage('MVN PACKAGE'){
+              steps{
+                  sh  'mvn package'
+              }
+        }
+      
+        stage('Building our image') {
+               steps{
+                        script {
+                            dockerImage = docker.build registry + ":latest"
+                        }
+               }
+        }
 
       
 

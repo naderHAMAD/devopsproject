@@ -47,10 +47,40 @@ pipeline {
           }
 
       
-
+  stage('Test & Jacoco Static Analysis') {
+            junit 'target/surefire-reports/**/*.xml'
+            jacoco()
+        }
         
+           stage ('Publish to Nexus') {
+            nexusPublisher nexusInstanceId: 'INSTANCE_IN_JENKINS_SETTINGS', nexusRepositoryId: 'REPO_NAME', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './target/gift-shop-api.war']],mavenCoordinate: [artifactId: 'gift-shop-mono', groupId: 'com.online', packaging: 'war', version: '1']]]
+        }
 
         
 
     }
+    
+    post{
+
+            success {
+                mail to: "nader.hamad@esprit.tn",
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n, More info at: ${env.BUILD_URL}",
+                from: "nader.hamad@esprit.tn",
+                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+            }
+
+            failure{
+                mail to: "nader.hamad@esprit.tn",
+                subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                from: "nader.hamad@esprit.tn",
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore Info can be found here: ${env.BUILD_URL}"
+            }
+
+            changed{
+                mail to: "nader.hamad@esprit.tn",
+                subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                from: "nader.hamad@esprit.tn",
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore Info can be found here: ${env.BUILD_URL}"
+            }
+        }
 }

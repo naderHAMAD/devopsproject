@@ -49,12 +49,17 @@ pipeline {
  
         
 
+     stages {
+        stage('Ok') {
+            steps {
+                echo "Ok"
+            }
+        }
     }
-    
     post {
         always {
-	mail bcc: '', body: 'Ceci est un test de mailing', cc: '', from: '', replyTo: '', subject: 'Jenkins-buils-Notification', to: 'rm.nader.28@gmail.com'
- 
-}
+            emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+        }
+    }
 }
 }

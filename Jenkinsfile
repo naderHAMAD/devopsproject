@@ -35,12 +35,26 @@ pipeline {
               }
         }
       
-            stage("nexus deploy"){
-               steps{
-                       sh 'mvn  deploy'
-               }
-
+           stage('Nexus Stage') {
+steps {
+	
+	
+	sh 'mvn clean deploy -DskipTests'
+sh'mvn clean deploy -Dmaven.test.skip=true -Dresume=false'
+	
+	
+	
+}
+}  
+	
+	
+              stage('Unit test - Junit and jacoco') {
+            steps {
+              sh "mvn test"
             }
+
+	      }
+	
 
           stage('MVN SONARQUBE'){
 
@@ -50,15 +64,7 @@ pipeline {
           }
 
       
-  stage('Test & Jacoco Static Analysis') {
-            junit 'target/surefire-reports/**/*.xml'
-            jacoco()
-        }
-        
-           stage ('Publish to Nexus') {
-            nexusPublisher nexusInstanceId: 'INSTANCE_IN_JENKINS_SETTINGS', nexusRepositoryId: 'REPO_NAME', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: './target/gift-shop-api.war']],mavenCoordinate: [artifactId: 'gift-shop-mono', groupId: 'com.online', packaging: 'war', version: '1']]]
-        }
-
+ 
         
 
     }

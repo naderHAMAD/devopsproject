@@ -35,25 +35,7 @@ pipeline {
               }
         }
       
-           stage('Nexus Stage') {
-steps {
-	
-	
-	sh 'mvn clean deploy -DskipTests'
-sh'mvn clean deploy -Dmaven.test.skip=true -Dresume=false'
-	
-	
-	
-}
-}  
-	
-	
-              stage('Unit test - Junit and jacoco') {
-            steps {
-              sh "mvn test"
-            }
-
-	      }
+    
 	
 
           stage('MVN SONARQUBE'){
